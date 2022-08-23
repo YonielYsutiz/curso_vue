@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/vue@next"></script>
+    <div id="app"></div>
+    <script>
+        const app = Vue.createApp({
+            data(){
+                return{
+                    text: "La puerta esta cerrada",
+                    open: false,
+                    username: "",
+                    posts:[{
+                        title: "Titulo 1",
+                        descripcion: "Locos por la coca XD"
+                    },
+                    {
+                        title: "Titulo 2",
+                        descripcion: "Locos por la merca XD"
+                    },
+                    {
+                        title: "Titulo 3",
+                        descripcion: "Locos por la mari XD"
+                    },
+                    {
+                        title: "Titulo 4",
+                        descripcion: "Locos por la tetas XD"
+                    }]
+                };
+            },
+            watch:{
+                open(value){
+                        if(value){
+                            this.text="Cierra sesion";
+                        } else {
+                            this.text= "Accede a tu cuenta";
+                            this.username= "";
+                        }
+                    }
+                },
+                computed:{
+                    label(){
+                        return this.open ? "Salir" : "Acceder";
+                    },
+                    style(){
+                        return this.open ? ['open'] : ['close']
+                }
+            },
+            template: `
+        <div class="container" :class="style">
+            <h2>{{ text }}</h2>
+            <div v-if="open">
+                <p>Hola, {{ username }}</p>
+                <div class="list">
+                    <item 
+                        v-for="(item, i) in posts" 
+                        :key="i"
+                        :post="item"
+                    />
+                </div>
+            </div>
+            <div v-else>
+                <div>Username</div>
+                <input type="text" v-model="username">
+            </div>
+            <button @click="open = !open">
+                    <div v-if="!open">Acceder</div>
+                    <div v-else>Salir</div>
+                </button>
+        </div>
+            `
+        })
+
+        app.component("item",{
+            props:["post"],
+            template: `
+            <div class="item">
+               <div class="title">{{post.title}}</div>
+                <p>{{post.descripcion}}</p> 
+            </div>
+            `
+        })
+        
+        const vm = app.mount("#app");
+        console.log(vm);
+    </script>
+    <style>
+        html, body{
+            height: 100vh ;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #app, .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+        }
+        button{
+            margin-top: 24px;
+            border: none;
+            background-color: white;
+            padding: 8px 24px;
+            border-radius: 12px;
+        }
+        .close{
+            background-color: #fcb7af;
+        }
+        .open {
+            background-color: #b0f2c2;
+        }
+        .list{
+            display: flex;
+            flex-direction: column;
+        }
+        .item{
+            border: 1px solid black;
+        }
+        .title{
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</body>
+</html>
